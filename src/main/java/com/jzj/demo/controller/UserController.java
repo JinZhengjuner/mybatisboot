@@ -3,9 +3,12 @@ package com.jzj.demo.controller;
 import com.jzj.demo.entity.User;
 import com.jzj.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/testBoot")
@@ -14,13 +17,24 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    //通过用户id获取用户所有信息
-    //    http://localhost:8080/testBoot/getUser/1(此处1为要获取的id）
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    private static int num = 0;
+
+
     @RequestMapping(value = "getUser/{id}", method = RequestMethod.GET)
-    //    http://localhost:8080/testBoot/getUser?id=1(此处1为要获取的id）
-    //    @RequestMapping(value = "/getUser", method = RequestMethod.GET)
     public String GetUser(@PathVariable int id) {
-        return userService.getUserInfo(id).toString();
+        String s = stringRedisTemplate.opsForValue().get("1");
+        if (Objects.nonNull(s)){
+
+            System.out.println("redis缓存获取数据:num " + num++);
+            return s;
+        }
+        s = userService.getUserInfo(id).toString();
+        System.out.println("mysql获取数据");
+        stringRedisTemplate.opsForValue().set("1", s, 60, TimeUnit.SECONDS);
+        return s;
     }
 
     //通过用户id删除用户
