@@ -5,10 +5,17 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User {
     private Integer id;
     private String userName;
     private String passWord;
     private String realName;
+    @Builder.Default
+    private int age = 1;
+
+    public static void main(String[] args) {
+        User build = User.builder().build();
+    }
 
 }

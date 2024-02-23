@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MybatisbootApplication {
 
     public static void main(String[] args) {
+        System.out.println(1);
         SpringApplication.run(MybatisbootApplication.class, args);
     }
 

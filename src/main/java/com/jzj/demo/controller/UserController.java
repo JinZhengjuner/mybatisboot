@@ -61,9 +61,10 @@ public class UserController {
     }
     //插入新用户
     //    http://localhost:8080/testBoot/insert?id=100&userName=波波&passWord=123456&realName=lalala
-    @RequestMapping(value = "/insert", method = RequestMethod.POST)
-    public User insert(User user) {
-        return userService.save(user);
+    @RequestMapping(value = "/insert", method = RequestMethod.GET)
+    public User insert() {
+        User user1 = new User(1, "jzj", "mima", "xxx", 10);
+        return userService.save(user1);
     }
     //打印所有用户信息
     //    http://localhost:8080/testBoot/selectAll

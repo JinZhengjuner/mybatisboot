@@ -39,4 +39,7 @@ public interface UserMapper {
      * @return
      */
     List<User> selectAll ();
+
+    int saveUser1(User user);
+
 }
