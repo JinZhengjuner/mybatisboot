@@ -13,6 +13,6 @@ public class Student {
         HashMap<String, String> map = new HashMap<>();
 
         map.put("a", "a");
-        map.put("远程","")
+        map.put("远程","");
     }
 }

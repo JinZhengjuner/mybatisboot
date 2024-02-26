@@ -11,8 +11,6 @@ public class User {
     private String userName;
     private String passWord;
     private String realName;
-    @Builder.Default
-    private int age = 1;
 
     public static void main(String[] args) {
         User build = User.builder().build();

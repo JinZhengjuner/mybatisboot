@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -63,7 +62,10 @@ public class UserController {
     //    http://localhost:8080/testBoot/insert?id=100&userName=波波&passWord=123456&realName=lalala
     @RequestMapping(value = "/insert", method = RequestMethod.GET)
     public User insert() {
-        User user1 = new User(1, "jzj", "mima", "xxx", 10);
+        Map<String, String> map  = new HashMap<>();
+        map.put("1", "1");
+        map.put("2", "2");
+        User user1 = new User(1, "jzj", "金", "");
         return userService.save(user1);
     }
     //打印所有用户信息
