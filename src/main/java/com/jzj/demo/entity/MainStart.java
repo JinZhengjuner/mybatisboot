@@ -38,6 +38,7 @@ public class MainStart {
     //二级缓存：为了将成熟Bean，和纯净Bean分离开来，避免读取到不完整的bean
     private static Map<String, Object> earlySingletonObject = new ConcurrentHashMap<>();
 
+    //假设A 使用了Aop，要给A创建动态代理
     public static Object getBean(String beanName) throws Exception{
         Object singleton = getSingleton(beanName);
         if (singleton != null){
@@ -48,8 +49,16 @@ public class MainStart {
         Class<?> beanClass = beanDefinition.getBeanClass();
         Object instanceBean = beanClass.newInstance();
 
-        //添加到一级缓存
         earlySingletonObject.put(beanName, instanceBean);
+
+        instanceBean = new JdkProxyBeanPostProcessor().getEarlyBeanReference(instanceBean, beanName);
+
+        //创建动态代理 （不是耦合的方式， beanPostProcessor）
+        //添加到二级缓存，spring在初始化之后也调用了后置处理器生成动态代理
+        //spring在哪里创建动态代理？   1.正常情况是在初始化之后 2.出现了循环依赖，在实例化之后调用
+        //spring还是希望在初始化后再创建，包括循环依赖 需要判断当前是不是循环依赖
+        //getBean这里使用后置处理器，不太符合我们spring的生命周期规则，后置处理器都是在create()的时候调用的
+
 
         //属性赋值
         for (Field declaredField : beanClass.getDeclaredFields()) {
@@ -64,7 +73,7 @@ public class MainStart {
             }
         }
         //初始化  inil.... initMethod @postConstract
-        //添加到一级缓存
+        //添加到一级缓存  若在这里创建aop，已经晚了，A里面的B就不是动态代理
         singletonObjects.put(beanName, instanceBean);
         return instanceBean;
     }
@@ -73,7 +82,11 @@ public class MainStart {
         if (singletonObjects.containsKey(beanName)){
             return singletonObjects.get(beanName);
         }else if (earlySingletonObject.containsKey(beanName)){
-            return earlySingletonObject.get(beanName);
+            //说明是循环依赖
+            Object obj = new JdkProxyBeanPostProcessor().getEarlyBeanReference(earlySingletonObject.get(beanName), beanName);
+            earlySingletonObject.put(beanName, obj);
+            return obj;
+//            return earlySingletonObject.get(beanName);
         }
         return null;
     }
