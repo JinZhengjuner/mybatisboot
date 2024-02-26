@@ -35,6 +35,9 @@ public class MainStart {
     // 一级缓存 单例池   成熟态Bean
     private static Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
 
+    //二级缓存：为了将成熟Bean，和纯净Bean分离开来，避免读取到不完整的bean
+    private static Map<String, Object> earlySingletonObject = new ConcurrentHashMap<>();
+
     public static Object getBean(String beanName) throws Exception{
         Object singleton = getSingleton(beanName);
         if (singleton != null){
@@ -46,7 +49,7 @@ public class MainStart {
         Object instanceBean = beanClass.newInstance();
 
         //添加到一级缓存
-        singletonObjects.put(beanName, instanceBean);
+        earlySingletonObject.put(beanName, instanceBean);
 
         //属性赋值
         for (Field declaredField : beanClass.getDeclaredFields()) {
@@ -69,6 +72,8 @@ public class MainStart {
     public static Object getSingleton(String beanName){
         if (singletonObjects.containsKey(beanName)){
             return singletonObjects.get(beanName);
+        }else if (earlySingletonObject.containsKey(beanName)){
+            return earlySingletonObject.get(beanName);
         }
         return null;
     }
