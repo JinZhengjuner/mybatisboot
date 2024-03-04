@@ -8,7 +8,7 @@ public class InstanceA implements Cloneable{
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        //远程修改AAAA
+        //远程修改A
         return super.clone();
     }
 
