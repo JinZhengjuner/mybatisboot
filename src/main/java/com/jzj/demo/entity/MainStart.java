@@ -59,7 +59,7 @@ public class MainStart {
         Class<?> beanClass = beanDefinition.getBeanClass();
         Object instanceBean = beanClass.newInstance();
 
-        singletonFactories.put(beanName,() -> new JdkProxyBeanPostProcessor().getEarlyBeanReference(instanceBean, beanName));
+//        singletonFactories.put(beanName,() -> new JdkProxyBeanPostProcessor().getEarlyBeanReference(instanceBean, beanName));
 
         //这里二级缓存就不存了，万一对象还不是代理对象，到时候取到的就不是代理对象
 //        earlySingletonObject.put(beanName, instanceBean);
