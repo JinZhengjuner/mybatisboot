@@ -11,7 +11,7 @@ public class InstanceB {
 
 
     public InstanceA getInstanceA() {
-        //远程修改B
+        //远程修改BBBB
         return instanceA;
     }
 
