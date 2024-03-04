@@ -11,6 +11,7 @@ public class InstanceB {
 
 
     public InstanceA getInstanceA() {
+        //远程修改B
         return instanceA;
     }
 
