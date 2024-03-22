@@ -1,17 +1,37 @@
 package com.jzj.demo.controller;
 
+import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.RateLimiter;
+import com.jzj.demo.entity.People;
 import com.jzj.demo.entity.User;
 import com.jzj.demo.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @RestController
 @RequestMapping("/testBoot")
+@Slf4j
 public class UserController {
+    @Scheduled(fixedRate = 2 * 1000)
+    public void test() throws InterruptedException {
+        log.info("定时任务......");
+        Thread.sleep(3000);
+    }
+
+    public static void main(String[] args) {
+        RateLimiter limiter = RateLimiter.create(5);
+
+        for (int i = 0; i < 50; i++) {
+            double acquire = limiter.acquire(10);
+            log.info("success： " + acquire);
+        }
+    }
 
     @Autowired
     private UserService userService;
@@ -20,6 +40,11 @@ public class UserController {
     private StringRedisTemplate stringRedisTemplate;
 
     private static int num = 0;
+
+    @RequestMapping(value = "/data")
+    public List<People> get(){
+       return Lists.newArrayList(new People(1, "张三"), new People(2, "李四"), new People(3, "王五"));
+    }
 
 
     @RequestMapping(value = "getUser/{id}", method = RequestMethod.GET)
