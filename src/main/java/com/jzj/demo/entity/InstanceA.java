@@ -1,10 +1,11 @@
 package com.jzj.demo.entity;
 
+import com.jzj.demo.controller.XiuShi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class InstanceA implements Cloneable{
+public class InstanceA extends XiuShi implements Cloneable{
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
