@@ -17,6 +17,17 @@
         <java.version>8</java.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.27</version>
+        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
@@ -114,10 +125,38 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-        </plugins>
+            <plugin>
+                <!--【I】加密后，方法体被清空，保留方法参数、注解等信息；是为了兼容spring,swagger等扫描注解的框架；
+                【2】方法体被清空后，反编译者只能看到方法名和注解，看不到方法的具体内容：
+                【3】加密后的项目需要设置javaagent来启动，启动过程中解密class,完全内存解密，不留下任何解密后的文件。
+                【启动加密的Jar】:生成xxx-encrypted.jar,这个就是加密后的jar文件；加密后的文件不可直接执行
+                无密码：需要java-javaagent:xxx-encrypted.jar-jar xxx-encrypted.jar
+                有密码：java-javaagent:xxx-encrypted.jar='-pwdo0o80o0'-jar xxx-encrypted.jar-->
+                <groupId>net.roseboy</groupId>
+                <artifactId>classfinal-maven-plugin</artifactId>
+                <version>1.2.1</version>
 
-    </build>
+                <configuration>
+                <password>jzj</password><!--加密密码，如果是#号，则使用无密码模式加密-->
+                <packages>com.jzj.demo</packages><!--加密的包名（可为空，多个用"，"分割）-->
+                <cfgfiles>application.yml</cfgfiles>
+                <!--需要加密的配置文件，
+                classes目录下的ymL或properties文件（可为空，多个用"，"分割）-->
+                <libjars></libjars>
+                <!--jar包Lib下要加密jar文件名（可为空，多个用"，"分割）-->
+                </configuration>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>classFinal</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+
+</build>
 
 
-
-</project>
+        </project>
