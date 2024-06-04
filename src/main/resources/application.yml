@@ -11,6 +11,9 @@ server:
     connection-timeout: 300
 
 spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
   datasource:
     username: root
     password: 123456
