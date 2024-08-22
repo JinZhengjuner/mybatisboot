@@ -20,6 +20,7 @@ class MybatisbootApplicationTests {
             Thread thread = new Thread();
             System.out.println(x);
             thread.setName("my poll .....");
+            System.out.println("冲突测试1");
             return thread;
         });
     }
@@ -30,6 +31,7 @@ class MybatisbootApplicationTests {
     }
     @Test
     void demo() throws ExecutionException, InterruptedException {
+        System.out.println("冲突测试2");
 //        //创建不带返回值的异步任务
 //        CompletableFuture.runAsync(() -> this.getName("张三"), executorService);
 //
